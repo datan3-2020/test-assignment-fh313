@@ -1,6 +1,6 @@
 ---
 title: "Test statistical assignment"
-author: "Alexey Bessudnov"
+author: "Francesca Hume"
 date: "22 January 2020"
 output: github_document
 ---
@@ -25,7 +25,7 @@ First, we need to read the data into R. For this assignment, I ask you to use da
 ```{r}
 library(tidyverse)
 # This attaches the tidyverse package. If you get an error here you need to install the package first. 
-Data <- read_tsv("")
+Data <- read_tsv("/Users/chescamae98/Desktop/UKDA-6614-tab/tab/ukhls_w9/i_youth.tab")
 # You need to add between the quotation marks a full path to the required file on your computer.
 ```
 
@@ -38,6 +38,17 @@ Tabulate three variables: children's gender, age (please use derived variables) 
 ```{r}
 # add your code here
 
+summary(Data$i_sex_dv)
+
+summary(Data$i_age_dv)
+
+summary(Data$i_ypsocweb)
+
+table(Data$i_age_dv)
+
+table(Data$i_sex_dv)
+
+table(Data$i_ypsocweb)
 ```
 
 ## Recode variables (10 points)
@@ -46,6 +57,28 @@ We want to create a new binary variable for having an account on social media so
 
 ```{r}
 # add your code here
+
+Data2<- mutate(Data,
+                 Socialmedia = i_ypsocweb %>%
+                   recode(`2` = 0,
+                     `1` = 1, 
+                     `-9` = NA_real_)
+
+                 %>% 
+                   as.factor(),
+                 
+                 gender = i_sex_dv %>%
+                   recode(`1` = "Male",
+                          `2` = "Female",
+                          `0` = NA_character_)
+                 %>%
+                   as.factor())
+
+summary(Data2$gender)
+summary(Data2$Socialmedia)
+
+
+
 ```
 
 ## Calculate means (10 points)
@@ -54,11 +87,18 @@ Produce code that calculates probabilities of having an account on social media 
 
 ```{r}
 # add your code here
+
+prop.table(table(Data2$gender, Data2$Socialmedia),1)
+
+prop.table(table(Data2$Socialmedia, Data2$i_age_dv),2)
+
 ```
 
 ## Write short interpretation (10 points)
 
 Write two or three sentences interpreting your findings above.
+
+The data suggests that female youths (84%) are more likely to belong to a social media-website than young males (78%) are. In regards to ages, as the youths get older, they are more likely to belong to a social media website; with it going from 0% likelihood at age 9, to 100% likelihood at age 16 from the particpants in the dataset. 
 
 ## Visualise results (20 points)
 
@@ -66,6 +106,25 @@ Create a statistical graph (only one, but it can be faceted) illustrating your r
 
 ```{r}
 # add your code here
+
+plot.data <- prop.table(table(Data2$gender, Data2$i_age_dv),2) %>%
+  as.data.frame() %>%
+  mutate(
+    category = row.names(.data)
+  )
+
+
+ggplot(data=plot.data, aes(x = Var2, y=Freq)) +
+  geom_bar(stat="identity") + facet_wrap( ~ Var1) + theme_bw() +
+  labs(title= "Social Media Use: Gender and Age",
+       x="Age",
+       y="Proportion on social media") +
+  theme(axis.text.x = element_text(angle=45, hjust=1))
+
+
+
+
+
 ```
 
 ## Conclusion
