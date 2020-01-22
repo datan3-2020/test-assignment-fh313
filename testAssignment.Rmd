@@ -114,7 +114,7 @@ plot.data <- prop.table(table(Data2$gender, Data2$i_age_dv),2) %>%
   )
 
 
-ggplot(data=plot.data, aes(x = Var2, y=Freq)) +
+plot<- ggplot(data=plot.data, aes(x = Var2, y=Freq)) +
   geom_bar(stat="identity") + facet_wrap( ~ Var1) + theme_bw() +
   labs(title= "Social Media Use: Gender and Age",
        x="Age",
@@ -123,7 +123,7 @@ ggplot(data=plot.data, aes(x = Var2, y=Freq)) +
 
 
 
-
+plot(plot)
 
 ```
 

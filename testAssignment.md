@@ -214,12 +214,16 @@ plot.data <- prop.table(table(Data2$gender, Data2$i_age_dv),2) %>%
   )
 
 
-ggplot(data=plot.data, aes(x = Var2, y=Freq)) +
+plot<- ggplot(data=plot.data, aes(x = Var2, y=Freq)) +
   geom_bar(stat="identity") + facet_wrap( ~ Var1) + theme_bw() +
   labs(title= "Social Media Use: Gender and Age",
        x="Age",
        y="Proportion on social media") +
   theme(axis.text.x = element_text(angle=45, hjust=1))
+
+
+
+plot(plot)
 ```
 
 ![](testAssignment_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
